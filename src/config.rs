@@ -4,7 +4,7 @@ use std::io::{Error, Write};
 use std::path::Path;
 
 use dirs::config_dir;
-use ron::ser::{PrettyConfig, to_string_pretty};
+use ron::ser::{to_string_pretty, PrettyConfig};
 use serde::Serialize;
 
 use crate::types::ConfigType;
@@ -23,19 +23,23 @@ pub fn initialize() -> HashMap<ConfigType, String> {
         ("editor", "nvim"),
     ]);
 
-    let config_path = format!("{}{}", config_dir().unwrap().to_str().unwrap(), defaults.get(&"dir").unwrap());
+    let config_path = format!(
+        "{}{}",
+        config_dir().unwrap().to_str().unwrap(),
+        defaults.get(&"dir").unwrap()
+    );
 
     let config_file_path_str = format!("{}/{}", config_path, defaults.get(&"config").unwrap());
     let config_file_path = Path::new(&config_file_path_str);
-     match File::open(&config_file_path) {
+    match File::open(&config_file_path) {
         Ok(_) => (),
         Err(_) => match create_config(&config_path, &config_file_path, &defaults) {
             Ok(_) => (),
             Err(err) => {
                 println!("Error creating configuration file {}: {}", config_path, err);
                 std::process::exit(1);
-            },
-        } 
+            }
+        },
     };
 
     let marks_file_path_str = format!("{}/{}", config_path, defaults.get(&"marks").unwrap());
@@ -46,10 +50,13 @@ pub fn initialize() -> HashMap<ConfigType, String> {
         Err(_) => match create_marks(&marks_file_path) {
             Ok(_) => (),
             Err(err) => {
-                println!("Failed to create marks file at {}: {}", marks_file_path_str, err);
+                println!(
+                    "Failed to create marks file at {}: {}",
+                    marks_file_path_str, err
+                );
                 std::process::exit(1);
-            },
-        }
+            }
+        },
     };
 
     HashMap::from([
@@ -58,7 +65,11 @@ pub fn initialize() -> HashMap<ConfigType, String> {
     ])
 }
 
-fn create_config(config_path: &String, file_path: &Path, defaults: &HashMap<&str, &str>) -> Result<(), Error> {
+fn create_config(
+    config_path: &String,
+    file_path: &Path,
+    defaults: &HashMap<&str, &str>,
+) -> Result<(), Error> {
     create_dir_all(config_path)?;
 
     let mut file = File::create(file_path)?;
@@ -68,8 +79,7 @@ fn create_config(config_path: &String, file_path: &Path, defaults: &HashMap<&str
         editor: defaults.get(&"editor").unwrap().to_string(),
     };
 
-    let pretty = PrettyConfig::new()
-        .depth_limit(4);
+    let pretty = PrettyConfig::new().depth_limit(4);
 
     file.write_all(to_string_pretty(&config, pretty).unwrap().as_bytes())?;
 
@@ -81,8 +91,7 @@ fn create_marks(file_path: &Path) -> Result<(), Error> {
 
     let marks: HashMap<String, String> = HashMap::new();
 
-    let pretty = PrettyConfig::new()
-        .depth_limit(4);
+    let pretty = PrettyConfig::new().depth_limit(4);
 
     file.write_all(to_string_pretty(&marks, pretty).unwrap().as_bytes())?;
 
