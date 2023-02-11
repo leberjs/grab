@@ -49,3 +49,17 @@ pub fn write_hashmap_to_file(file_path_str: &String, marks: &HashMap<String, Str
         }
     }
 }
+
+pub fn get_editor_from_config(file_path_str: &String) -> String {
+    let config: HashMap<String, String> = read_file_to_hashmap(&file_path_str);
+
+    let editor = match config.get(&"editor".to_string()) {
+        None => {
+            println!("Editor not found in config");
+            std::process::exit(1);
+        },
+        val => val.unwrap(),
+    };
+
+    editor.clone()
+}

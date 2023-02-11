@@ -5,15 +5,8 @@ use std::path::Path;
 
 use dirs::config_dir;
 use ron::ser::{to_string_pretty, PrettyConfig};
-use serde::Serialize;
 
 use crate::types::ConfigType;
-
-#[derive(Serialize)]
-struct Config {
-    marks: String,
-    editor: String,
-}
 
 pub fn initialize() -> HashMap<ConfigType, String> {
     let defaults = HashMap::from([
@@ -74,10 +67,10 @@ fn create_config(
 
     let mut file = File::create(file_path)?;
 
-    let config = Config {
-        marks: defaults.get(&"marks").unwrap().to_string(),
-        editor: defaults.get(&"editor").unwrap().to_string(),
-    };
+    let config = HashMap::from([
+        ("marks", defaults.get(&"marks").unwrap().to_string()),
+        ("editor", defaults.get(&"editor").unwrap().to_string()),
+    ]);
 
     let pretty = PrettyConfig::new().depth_limit(4);
 

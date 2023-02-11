@@ -7,6 +7,7 @@ use crate::utils::read_file_to_hashmap;
 pub fn list(file_path_str: &String) -> () {
     let marks: HashMap<String, String> = read_file_to_hashmap(&file_path_str);
 
+    println!("");
     colorize_println("Current Marks:", Colors::BrightGreenFg);
     colorize_println("--------------", Colors::BrightGreenFg);
     println!("");
