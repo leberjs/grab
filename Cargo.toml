@@ -1,9 +1,15 @@
 [package]
-name = "grab"
+name = "g-rab"
 version = "0.1.0"
+authors = ["Jason Leber <leberjs@gmail.com>"]
+license = "MIT"
+description = "Tool to set and edit bookmarks in desired editor"
+repository = "https://github.com/leberjs/grab"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "grab"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.0", features = ["derive"] }
