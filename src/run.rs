@@ -14,7 +14,6 @@ pub fn run (file_path_str: &String, editor: &String, mark: &str) -> () {
         val => val.unwrap(),
     };
 
-    println!("{}", &mark_path);
     let _command = Command::new(&editor)
         .arg(&mark_path)
         .status()
